@@ -34,7 +34,7 @@ try{
             .eq("whether_subscribed", true); // Correct
     
           if (data) {
-            console.log(data);
+            //console.log(data);
     
             data.map(async (user, index) => {
               const { chosen_category, user_id, user_name } = user;
@@ -85,7 +85,7 @@ try{
     
       bot.command("quote", async (ctx) => {
         
-        console.log("quote/ctx", ctx);
+        console.log("quote", ctx);
         const { id: user_id, first_name: user_name } = ctx.from;
     
         const res = await axios.get(
@@ -139,7 +139,6 @@ try{
                 chosen_category: "inspirational",
               },
             ]);
-            console.log(error);
     
             if (!error) {
               await ctx.reply(`You have successfully subscribed ❤`);
