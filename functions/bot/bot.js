@@ -85,8 +85,9 @@ try{
     
       exports.handler = async event => {
         try {
-          console.log(await bot.handleUpdate(JSON.parse(event.body)))
-          await bot.handleUpdate(JSON.parse(event.body))
+          console.log((event.body));
+          
+          await bot.handleUpdate(JSON.parse(event.body));
 
           bot.start((ctx) => ctx.reply(`Welcome to Daily Quotes Bot
           To receive a quote /quote
@@ -185,8 +186,8 @@ try{
         bot.action(wordsArray, async (ctx) => {
           const { id: user_id } = ctx.from;
           const selectedOption = ctx.match;
-          ctx.reply(`You selected: ${selectedOption}`);
-          ctx.editMessageReplyMarkup();
+          await ctx.reply(`You selected: ${selectedOption}`);
+          await ctx.editMessageReplyMarkup();
       
           const { error } = await supabase
             .from("subscribers")
@@ -211,7 +212,7 @@ try{
         });
 
           return { statusCode: 200, body: "" }
-          
+
         } catch (e) {
           console.error("error in handler:", e)
           return { statusCode: 400, body: "This endpoint is meant for bot and telegram communication" }
