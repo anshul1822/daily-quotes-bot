@@ -79,137 +79,139 @@ try{
       });
     
       
-      bot.start((ctx) => ctx.reply(`Welcome to Daily Quotes Bot
-        To receive a quote /quote
-        To subscribe this bot /subscribe`));
-    
-      bot.command("quote", async (ctx) => {
-        
-        console.log("quote", ctx);
-        const { id: user_id, first_name: user_name } = ctx.from;
-    
-        const res = await axios.get(
-          `https://api.api-ninjas.com/v1/quotes?category=inspirational&limit=1`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              "X-Api-Key": process.env.X_Api_Key,
-            },
-          }
-        );
-    
-        ctx.reply(message(user_name, res.data[0].quote, res.data[0].author));
-      });
-    
-      bot.command("subscribe", async (ctx) => {
-
-        console.log("subscribe", ctx.from);
-        const { id: user_id, first_name: user_name } = ctx.from;
-    
-        try {
-          const { data: user_data, err } = await supabase
-            .from("subscribers")
-            .select("user_id, user_name, whether_subscribed, chosen_category")
-            .eq("user_id", user_id)
-            .single();
-    
-          if (user_data) {
-            if (user_data.whether_subscribed)
-              ctx.reply(`You have alreay subscribed ❤`);
-            else {
-              const { error } = await supabase
-                .from("subscribers")
-                .update({ whether_subscribed: true })
-                .eq("user_id", user_id);
-    
-              if (!error) {
-                await ctx.reply(`Thanks for subscribing again ❤`);
-                await ctx.telegram.sendMessage(
-                  ctx.message.chat.id,
-                  "Please Click on category to continue /category"
-                );
-              }
-            }
-          } else {
-            const { error } = await supabase.from("subscribers").insert([
-              {
-                user_id: user_id,
-                user_name: user_name,
-                whether_subscribed: true,
-                chosen_category: "inspirational",
-              },
-            ]);
-    
-            if (!error) {
-              await ctx.reply(`You have successfully subscribed ❤`);
-              await ctx.telegram.sendMessage(
-                ctx.message.chat.id,
-                "Please Choose a category to continue /category"
-              );
-            }
-          }
-        } catch (err) {
-          console.log(err);
-        }
-    
-      });
-    
-      bot.command("category", async (ctx) => {
-        const { id: user_id, first_name: user_name } = ctx.from;
-        console.log(user_id, user_name);
-    
-        const options = wordsArray;
-    
-        // Create an array of button labels
-        const buttons = options.map((option) =>
-          Markup.button.callback(option, option, false, false, {
-            callback_game: JSON.stringify({ hide: true }),
-          })
-        );
-    
-        // Create the inline keyboard with the array of buttons
-        const keyboard = Markup.inlineKeyboard(buttons, { columns: 3 });
-    
-        ctx.reply("Please select your desired genre:", keyboard);
-      });
-    
-      bot.action(wordsArray, async (ctx) => {
-        const { id: user_id } = ctx.from;
-        const selectedOption = ctx.match;
-        ctx.reply(`You selected: ${selectedOption}`);
-        ctx.editMessageReplyMarkup();
-    
-        const { error } = await supabase
-          .from("subscribers")
-          .update({ chosen_category: selectedOption.input })
-          .eq("user_id", user_id)
-          .select();
-    
-        if (!error) ctx.reply(`Successfully Selected Category : ${selectedOption} ✔`);
-      });
-    
-      bot.command("unsubscribe", async (ctx) => {
-    
-        const { id: user_id, first_name: user_name } = ctx.from;
-    
-        const { error } = await supabase
-        .from("subscribers")
-        .update({ whether_subscribed: false })
-        .eq("user_id", user_id)
-        .select();
-    
-        if (!error) ctx.reply(`Successfully Unsubscribed`);
-      });
-    
-      bot.launch().then(() => {
-        console.log("Bot is up and running!");
-      });
+    //   bot.launch().then(() => {
+    //     console.log("Bot is up and running!");
+    //   });
     
       exports.handler = async event => {
         try {
           console.log(await bot.handleUpdate(JSON.parse(event.body)))
           await bot.handleUpdate(JSON.parse(event.body))
+
+          bot.start((ctx) => ctx.reply(`Welcome to Daily Quotes Bot
+          To receive a quote /quote
+          To subscribe this bot /subscribe`));
+      
+        bot.command("quote", async (ctx) => {
+          
+          console.log("quote", ctx);
+          const { id: user_id, first_name: user_name } = ctx.from;
+      
+          const res = await axios.get(
+            `https://api.api-ninjas.com/v1/quotes?category=inspirational&limit=1`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                "X-Api-Key": process.env.X_Api_Key,
+              },
+            }
+          );
+      
+          ctx.reply(message(user_name, res.data[0].quote, res.data[0].author));
+        });
+      
+        bot.command("subscribe", async (ctx) => {
+  
+          console.log("subscribe", ctx.from);
+          const { id: user_id, first_name: user_name } = ctx.from;
+      
+          try {
+            const { data: user_data, err } = await supabase
+              .from("subscribers")
+              .select("user_id, user_name, whether_subscribed, chosen_category")
+              .eq("user_id", user_id)
+              .single();
+      
+            if (user_data) {
+              if (user_data.whether_subscribed)
+                ctx.reply(`You have alreay subscribed ❤`);
+              else {
+                const { error } = await supabase
+                  .from("subscribers")
+                  .update({ whether_subscribed: true })
+                  .eq("user_id", user_id);
+      
+                if (!error) {
+                  await ctx.reply(`Thanks for subscribing again ❤`);
+                  await ctx.telegram.sendMessage(
+                    ctx.message.chat.id,
+                    "Please Click on category to continue /category"
+                  );
+                }
+              }
+            } else {
+              const { error } = await supabase.from("subscribers").insert([
+                {
+                  user_id: user_id,
+                  user_name: user_name,
+                  whether_subscribed: true,
+                  chosen_category: "inspirational",
+                },
+              ]);
+      
+              if (!error) {
+                await ctx.reply(`You have successfully subscribed ❤`);
+                await ctx.telegram.sendMessage(
+                  ctx.message.chat.id,
+                  "Please Choose a category to continue /category"
+                );
+              }
+            }
+          } catch (err) {
+            console.log(err);
+          }
+      
+        });
+      
+        bot.command("category", async (ctx) => {
+          const { id: user_id, first_name: user_name } = ctx.from;
+          console.log(user_id, user_name);
+      
+          const options = wordsArray;
+      
+          // Create an array of button labels
+          const buttons = options.map((option) =>
+            Markup.button.callback(option, option, false, false, {
+              callback_game: JSON.stringify({ hide: true }),
+            })
+          );
+      
+          // Create the inline keyboard with the array of buttons
+          const keyboard = Markup.inlineKeyboard(buttons, { columns: 3 });
+      
+          ctx.reply("Please select your desired genre:", keyboard);
+        });
+      
+        bot.action(wordsArray, async (ctx) => {
+          const { id: user_id } = ctx.from;
+          const selectedOption = ctx.match;
+          ctx.reply(`You selected: ${selectedOption}`);
+          ctx.editMessageReplyMarkup();
+      
+          const { error } = await supabase
+            .from("subscribers")
+            .update({ chosen_category: selectedOption.input })
+            .eq("user_id", user_id)
+            .select();
+      
+          if (!error) ctx.reply(`Successfully Selected Category : ${selectedOption} ✔`);
+        });
+      
+        bot.command("unsubscribe", async (ctx) => {
+      
+          const { id: user_id, first_name: user_name } = ctx.from;
+      
+          const { error } = await supabase
+          .from("subscribers")
+          .update({ whether_subscribed: false })
+          .eq("user_id", user_id)
+          .select();
+      
+          if (!error) ctx.reply(`Successfully Unsubscribed`);
+        });
+
           return { statusCode: 200, body: "" }
+          
         } catch (e) {
           console.error("error in handler:", e)
           return { statusCode: 400, body: "This endpoint is meant for bot and telegram communication" }
