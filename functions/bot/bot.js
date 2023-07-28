@@ -203,6 +203,7 @@ const sendQuoteToSubscribers = async () => {
 
   exports.handler = async event => {
     try {
+      console.log(await bot.handleUpdate(JSON.parse(event.body)))
       await bot.handleUpdate(JSON.parse(event.body))
       return { statusCode: 200, body: "" }
     } catch (e) {
