@@ -4,8 +4,8 @@ const { createClient } = require("@supabase/supabase-js");
 
 const axios = require("axios");
 const schedule = require("node-schedule");
-const wordsArray = require("./data");
-const message = require("./constants");
+const wordsArray = require("./data_bot");
+const message = require("./constants_bot");
 
 require("dotenv").config();
 
