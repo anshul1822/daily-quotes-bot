@@ -84,7 +84,8 @@ try{
         To subscribe this bot /subscribe`));
     
       bot.command("quote", async (ctx) => {
-    
+        
+        console.log("quote/ctx", ctx);
         const { id: user_id, first_name: user_name } = ctx.from;
     
         const res = await axios.get(
@@ -101,6 +102,8 @@ try{
       });
     
       bot.command("subscribe", async (ctx) => {
+
+        console.log("subscribe", ctx.from);
         const { id: user_id, first_name: user_name } = ctx.from;
     
         try {
@@ -154,7 +157,7 @@ try{
     
       bot.command("category", async (ctx) => {
         const { id: user_id, first_name: user_name } = ctx.from;
-        //console.log(user_id, user_name);
+        console.log(user_id, user_name);
     
         const options = wordsArray;
     
