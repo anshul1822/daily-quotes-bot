@@ -43,7 +43,7 @@ try{
           await bot.handleUpdate(JSON.parse(event.body));
           // await teleBot.handleUpdate(JSON.parse(event.body));
 
-          bot.setWebhook("https://daily-quotes-777.netlify.app/.netlify/functions/bot")
+          teleBot.setWebhook("https://daily-quotes-777.netlify.app/.netlify/functions/bot")
           .then(() => {
               console.log("Telegram bot webhook set successfully!");
           })
