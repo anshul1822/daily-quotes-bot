@@ -10,40 +10,19 @@ try{
     
     require("dotenv").config();
     
-    try{
-      var supabase = createClient(
-        process.env.SUPABASE_URL,
-        process.env.SUPABASE_KEY
-      );
-    
-      var bot = new Telegraf(process.env.BOT_TOKEN);
-    }
-    catch(err){
-        console.log(err);
-    }
-        
-      // const job = schedule.scheduleJob("36 * * * *", function scheduleJOB() {
-      //     console.log("This job runs at the 2nd minute of every hour.");
-      // });
-    
-      // const job1 = schedule.scheduleJob("*/30 * * * *", function scheduleJOB() {
-      //     console.log("This job runs at the 2nd minute of every hour.");
-      // });
-      
-    //   bot.launch().then(() => {
-    //     console.log("Bot is up and running!");
-    //   });
-    
       exports.handler = async event => {
         try {
           console.log((event.body));
                  
           await bot.handleUpdate(JSON.parse(event.body));
 
-          // const job2 = schedule.scheduleJob("0 8 * * *", function scheduleJOB() {
-          //   sendQuoteToSubscribers();
-          // }); 
-          
+          var supabase = createClient(
+            process.env.SUPABASE_URL,
+            process.env.SUPABASE_KEY
+          );
+        
+          var bot = new Telegraf(process.env.BOT_TOKEN);
+         
           const sendQuoteToSubscribers = async () => {
             try {
               console.log("Job triggering everyday at 8 AM", Date.now());
@@ -86,7 +65,13 @@ try{
             }
           };
 
+          // const job2 = schedule.scheduleJob("0 8 * * *", function scheduleJOB() {
+          //   sendQuoteToSubscribers();
+          // }); 
+
+          console.log("Job Scheduling function ", Date.now());
           const job2 = schedule.scheduleJob("*/2 * * * *", function scheduleJOB() {
+            console.log("Job Scheduling started at ", Date.now());
             sendQuoteToSubscribers();
           }); 
 
