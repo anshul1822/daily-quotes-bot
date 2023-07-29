@@ -1,12 +1,13 @@
+const { Telegraf, Markup } = require("telegraf");
+const { createClient } = require("@supabase/supabase-js");
+
+const axios = require("axios");
+const wordsArray = require("./data_bot");
+const message = require("./constants_bot");
+
+require("dotenv").config();
+
 exports.handler = async (event) => {
-  const { Telegraf, Markup } = require("telegraf");
-  const { createClient } = require("@supabase/supabase-js");
-
-  const axios = require("axios");
-  const wordsArray = require("./data_bot");
-  const message = require("./constants_bot");
-
-  require("dotenv").config();
 
   try {
 
