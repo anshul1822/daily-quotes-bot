@@ -7,16 +7,17 @@ const message = require("./constants_bot");
 
 require("dotenv").config();
 
+var supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_KEY
+);
+
+var bot = new Telegraf(process.env.BOT_TOKEN);
+
 exports.handler = async (event) => {
 
   try {
 
-    var supabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_KEY
-    );
-
-    var bot = new Telegraf(process.env.BOT_TOKEN);
     await bot.handleUpdate(JSON.parse(event.body));
     console.log("bot started");
     // const sendQuoteToSubscribers = async () => {
@@ -71,11 +72,12 @@ exports.handler = async (event) => {
     //   sendQuoteToSubscribers();
     // });
 
-    bot.start((ctx) =>
+    bot.start((ctx) =>{
+      console.log("start", ctx);
       ctx.reply(`Welcome to Daily Quotes Bot
           To receive a quote /quote
           To subscribe this bot /subscribe`)
-    );
+  });
 
     bot.command("quote", async (ctx) => {
       console.log("quote", ctx);
@@ -90,6 +92,8 @@ exports.handler = async (event) => {
           },
         }
       );
+      
+      console.log(res.data);
 
       ctx.reply(message(user_name, res.data[0].quote, res.data[0].author));
     });
@@ -146,6 +150,7 @@ exports.handler = async (event) => {
     });
 
     bot.command("category", async (ctx) => {
+      console.log("category", ctx);
       const { id: user_id, first_name: user_name } = ctx.from;
       console.log(user_id, user_name);
 
