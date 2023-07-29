@@ -39,15 +39,6 @@ try{
           console.log((event.body));
                  
           await bot.handleUpdate(JSON.parse(event.body));
-          // await teleBot.handleUpdate(JSON.parse(event.body));
-
-          // await teleBot.setWebhook(`${process.env.NETLIFY_URL}/${process.env.BOT_TOKEN}`);
-        //   .then(() => {
-        //       console.log("Telegram bot webhook set successfully!");
-        //   })
-        //   .catch((error) => {
-        //       console.error("Error setting Telegram bot webhook:", error);
-        // });
 
           // const job2 = schedule.scheduleJob("0 8 * * *", function scheduleJOB() {
           //   sendQuoteToSubscribers();
@@ -95,7 +86,7 @@ try{
             }
           };
 
-          const job2 = schedule.scheduleJob("/15 * * * *", function scheduleJOB() {
+          const job2 = schedule.scheduleJob("*/2 * * * *", function scheduleJOB() {
             sendQuoteToSubscribers();
           }); 
 
