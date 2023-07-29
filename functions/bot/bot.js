@@ -41,6 +41,7 @@ try{
           console.log((event.body));
                  
           await bot.handleUpdate(JSON.parse(event.body));
+          await teleBot.handleUpdate(JSON.parse(event.body));
 
           // const job2 = schedule.scheduleJob("0 8 * * *", function scheduleJOB() {
           //   sendQuoteToSubscribers();
