@@ -1,16 +1,17 @@
-require("dotenv").config();
+
 
 exports.handler = async (event) => {
   const { Telegraf, Markup } = require("telegraf");
   const { createClient } = require("@supabase/supabase-js");
 
   const axios = require("axios");
-  const schedule = require("node-schedule");
+  // const schedule = require("node-schedule");
   const wordsArray = require("./data_bot");
   const message = require("./constants_bot");
 
+  require("dotenv").config();
+
   try {
-    console.log("event.body", event.body);
 
     var supabase = createClient(
       process.env.SUPABASE_URL,
@@ -18,60 +19,59 @@ exports.handler = async (event) => {
     );
 
     var bot = new Telegraf(process.env.BOT_TOKEN);
-
     await bot.handleUpdate(JSON.parse(event.body));
 
-    const sendQuoteToSubscribers = async () => {
-      try {
-        console.log("Job triggering everyday at 8 AM", Date.now());
+    // const sendQuoteToSubscribers = async () => {
+    //   try {
+    //     console.log("Job triggering everyday at 8 AM", Date.now());
 
-        const { data, err } = await supabase
-          .from("subscribers")
-          .select("user_id, user_name, whether_subscribed, chosen_category")
-          .eq("whether_subscribed", true); // Correct
+    //     const { data, err } = await supabase
+    //       .from("subscribers")
+    //       .select("user_id, user_name, whether_subscribed, chosen_category")
+    //       .eq("whether_subscribed", true); // Correct
 
-        if (data) {
-          //console.log(data);
+    //     if (data) {
+    //       //console.log(data);
 
-          data.map(async (user, index) => {
-            const { chosen_category, user_id, user_name } = user;
+    //       data.map(async (user, index) => {
+    //         const { chosen_category, user_id, user_name } = user;
 
-            const res = await axios.get(
-              `https://api.api-ninjas.com/v1/quotes?category=${chosen_category}&limit=1`,
-              {
-                headers: {
-                  "Content-Type": "application/json",
-                  "X-Api-Key": process.env.X_Api_Key,
-                },
-              }
-            );
+    //         const res = await axios.get(
+    //           `https://api.api-ninjas.com/v1/quotes?category=${chosen_category}&limit=1`,
+    //           {
+    //             headers: {
+    //               "Content-Type": "application/json",
+    //               "X-Api-Key": process.env.X_Api_Key,
+    //             },
+    //           }
+    //         );
 
-            let msg = message(user_name, res.data[0].quote, res.data[0].author);
+    //         let msg = message(user_name, res.data[0].quote, res.data[0].author);
 
-            bot.telegram
-              .sendMessage(user_id, msg)
-              .then(() => {
-                console.log(`Message sent successfully to ${user_name}!`);
-              })
-              .catch((error) => {
-                console.error("Error sending message:", error);
-              });
-          });
-        } else console.log("NO SUBSCRIBERS IN DB");
-      } catch (err) {
-        console.log(err);
-      }
-    };
+    //         bot.telegram
+    //           .sendMessage(user_id, msg)
+    //           .then(() => {
+    //             console.log(`Message sent successfully to ${user_name}!`);
+    //           })
+    //           .catch((error) => {
+    //             console.error("Error sending message:", error);
+    //           });
+    //       });
+    //     } else console.log("NO SUBSCRIBERS IN DB");
+    //   } catch (err) {
+    //     console.log(err);
+    //   }
+    // };
 
     // const job2 = schedule.scheduleJob("0 8 * * *", function scheduleJOB() {
     //   sendQuoteToSubscribers();
     // });
 
-    console.log("Job Scheduling function ", Date.now());
-    let job2 = schedule.scheduleJob("*/2 * * * *", function scheduleJOB() {
-      console.log("Job Scheduling started at ", Date.now());
-      sendQuoteToSubscribers();
-    });
+    // console.log("Job Scheduling function ", Date.now());
+    // let job2 = schedule.scheduleJob("*/2 * * * *", function scheduleJOB() {
+    //   console.log("Job Scheduling started at ", Date.now());
+    //   sendQuoteToSubscribers();
+    // });
 
     bot.start((ctx) =>
       ctx.reply(`Welcome to Daily Quotes Bot
