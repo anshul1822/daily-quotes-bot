@@ -1,11 +1,8 @@
-
-
 exports.handler = async (event) => {
   const { Telegraf, Markup } = require("telegraf");
   const { createClient } = require("@supabase/supabase-js");
 
   const axios = require("axios");
-  // const schedule = require("node-schedule");
   const wordsArray = require("./data_bot");
   const message = require("./constants_bot");
 
@@ -20,7 +17,7 @@ exports.handler = async (event) => {
 
     var bot = new Telegraf(process.env.BOT_TOKEN);
     await bot.handleUpdate(JSON.parse(event.body));
-
+    console.log("bot started");
     // const sendQuoteToSubscribers = async () => {
     //   try {
     //     console.log("Job triggering everyday at 8 AM", Date.now());
