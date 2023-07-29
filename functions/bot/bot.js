@@ -74,9 +74,10 @@ exports.handler = async (event) => {
 
     bot.start((ctx) =>{
       console.log("start", ctx);
-      ctx.reply(`Welcome to Daily Quotes Bot
-          To receive a quote /quote
-          To subscribe this bot /subscribe`)
+      ctx.reply(
+     ` Welcome to Daily Quotes Bot
+        To receive a quote /quote
+        To subscribe this bot /subscribe`)
   });
 
     bot.command("quote", async (ctx) => {
