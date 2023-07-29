@@ -23,49 +23,7 @@ try{
     catch(err){
         console.log(err);
     }
-    
-    const sendQuoteToSubscribers = async () => {
-        try {
-          console.log("Job triggering everyday at 8 AM", Date.now());
-    
-          const { data, err } = await supabase
-            .from("subscribers")
-            .select("user_id, user_name, whether_subscribed, chosen_category")
-            .eq("whether_subscribed", true); // Correct
-    
-          if (data) {
-            //console.log(data);
-    
-            data.map(async (user, index) => {
-              const { chosen_category, user_id, user_name } = user;
-    
-              const res = await axios.get(
-                `https://api.api-ninjas.com/v1/quotes?category=${chosen_category}&limit=1`,
-                {
-                  headers: {
-                    "Content-Type": "application/json",
-                    "X-Api-Key": process.env.X_Api_Key,
-                  },
-                }
-              );
-    
-              let msg = message(user_name, res.data[0].quote, res.data[0].author);
-    
-              teleBot
-                .sendMessage(user_id, msg)
-                .then(() => {
-                  console.log(`Message sent successfully to ${user_name}!`);
-                })
-                .catch((error) => {
-                  console.error("Error sending message:", error);
-                });
-            });
-          } else console.log("NO SUBSCRIBERS IN DB");
-        } catch (err) {
-          console.log(err);
-        }
-      };
-    
+        
       // const job = schedule.scheduleJob("36 * * * *", function scheduleJOB() {
       //     console.log("This job runs at the 2nd minute of every hour.");
       // });
@@ -88,6 +46,48 @@ try{
           //   sendQuoteToSubscribers();
           // }); 
           
+          const sendQuoteToSubscribers = async () => {
+            try {
+              console.log("Job triggering everyday at 8 AM", Date.now());
+        
+              const { data, err } = await supabase
+                .from("subscribers")
+                .select("user_id, user_name, whether_subscribed, chosen_category")
+                .eq("whether_subscribed", true); // Correct
+        
+              if (data) {
+                //console.log(data);
+        
+                data.map(async (user, index) => {
+                  const { chosen_category, user_id, user_name } = user;
+        
+                  const res = await axios.get(
+                    `https://api.api-ninjas.com/v1/quotes?category=${chosen_category}&limit=1`,
+                    {
+                      headers: {
+                        "Content-Type": "application/json",
+                        "X-Api-Key": process.env.X_Api_Key,
+                      },
+                    }
+                  );
+        
+                  let msg = message(user_name, res.data[0].quote, res.data[0].author);
+        
+                  teleBot
+                    .sendMessage(user_id, msg)
+                    .then(() => {
+                      console.log(`Message sent successfully to ${user_name}!`);
+                    })
+                    .catch((error) => {
+                      console.error("Error sending message:", error);
+                    });
+                });
+              } else console.log("NO SUBSCRIBERS IN DB");
+            } catch (err) {
+              console.log(err);
+            }
+          };
+
           const job2 = schedule.scheduleJob("/15 * * * *", function scheduleJOB() {
             sendQuoteToSubscribers();
           }); 
