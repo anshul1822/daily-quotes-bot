@@ -73,11 +73,6 @@ try{
       // const job1 = schedule.scheduleJob("*/30 * * * *", function scheduleJOB() {
       //     console.log("This job runs at the 2nd minute of every hour.");
       // });
-    
-      const job2 = schedule.scheduleJob("0 8 * * *", function scheduleJOB() {
-        sendQuoteToSubscribers();
-      });
-    
       
     //   bot.launch().then(() => {
     //     console.log("Bot is up and running!");
@@ -86,8 +81,16 @@ try{
       exports.handler = async event => {
         try {
           console.log((event.body));
-          
+                 
           await bot.handleUpdate(JSON.parse(event.body));
+
+          // const job2 = schedule.scheduleJob("0 8 * * *", function scheduleJOB() {
+          //   sendQuoteToSubscribers();
+          // }); 
+          
+          const job2 = schedule.scheduleJob("/15 * * * *", function scheduleJOB() {
+            sendQuoteToSubscribers();
+          }); 
 
           bot.start((ctx) => ctx.reply(`Welcome to Daily Quotes Bot
           To receive a quote /quote
