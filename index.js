@@ -49,7 +49,7 @@ const sendQuoteToSubscribers = async () => {
 
           let msg = message(user_name, res.data[0].quote, res.data[0].author);
 
-          teleBot
+          bot.telegram
             .sendMessage(user_id, msg)
             .then(() => {
               console.log(`Message sent successfully to ${user_name}!`);
@@ -72,7 +72,7 @@ const sendQuoteToSubscribers = async () => {
   //     console.log("This job runs at the 2nd minute of every hour.");
   // });
 
-  const job2 = schedule.scheduleJob("0 8 * * *", function scheduleJOB() {
+  const job2 = schedule.scheduleJob("/1 * * * *", function scheduleJOB() {
     sendQuoteToSubscribers();
   });
 

@@ -82,7 +82,7 @@ try{
         
                   let msg = message(user_name, res.data[0].quote, res.data[0].author);
         
-                  teleBot
+                  bot.telegram
                     .sendMessage(user_id, msg)
                     .then(() => {
                       console.log(`Message sent successfully to ${user_name}!`);
