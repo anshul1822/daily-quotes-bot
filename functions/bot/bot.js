@@ -13,15 +13,15 @@ try{
       exports.handler = async event => {
         try {
           console.log((event.body));
-                 
-          await bot.handleUpdate(JSON.parse(event.body));
 
           var supabase = createClient(
             process.env.SUPABASE_URL,
             process.env.SUPABASE_KEY
           );
         
-          var bot = new Telegraf(process.env.BOT_TOKEN);
+          var bot = new Telegraf(process.env.BOT_TOKEN);          
+                 
+          await bot.handleUpdate(JSON.parse(event.body));
          
           const sendQuoteToSubscribers = async () => {
             try {
