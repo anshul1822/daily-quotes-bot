@@ -18,7 +18,7 @@ try{
       );
     
       var bot = new Telegraf(process.env.BOT_TOKEN);
-      var teleBot = new TelegramBot(process.env.BOT_TOKEN);
+      var teleBot = new TelegramBot(process.env.BOT_TOKEN,  { polling: false });
     }
     catch(err){
         console.log(err);
@@ -41,7 +41,15 @@ try{
           console.log((event.body));
                  
           await bot.handleUpdate(JSON.parse(event.body));
-          await teleBot.handleUpdate(JSON.parse(event.body));
+          // await teleBot.handleUpdate(JSON.parse(event.body));
+
+          bot.setWebhook("https://daily-quotes-777.netlify.app/.netlify/functions/bot")
+          .then(() => {
+              console.log("Telegram bot webhook set successfully!");
+          })
+          .catch((error) => {
+              console.error("Error setting Telegram bot webhook:", error);
+        });
 
           // const job2 = schedule.scheduleJob("0 8 * * *", function scheduleJOB() {
           //   sendQuoteToSubscribers();
