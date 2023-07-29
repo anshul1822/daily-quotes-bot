@@ -1,7 +1,6 @@
 try{
 
     const { Telegraf, Markup } = require("telegraf");
-    const TelegramBot = require("node-telegram-bot-api");
     const { createClient } = require("@supabase/supabase-js");
     
     const axios = require("axios");
@@ -18,7 +17,6 @@ try{
       );
     
       var bot = new Telegraf(process.env.BOT_TOKEN);
-      var teleBot = new TelegramBot(process.env.BOT_TOKEN,  { polling: true });
     }
     catch(err){
         console.log(err);
